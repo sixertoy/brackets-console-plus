@@ -1,9 +1,9 @@
-brackets-console
+Console Plus
 ================
 
 A Brackets extension to see console.log & console.error in a Brackets Panel
 
-![Screenshot]()
+![Screenshot](https://github.com/malas34/brackets-console-plus/blob/master/screenshot.jpg)
 
 
 > Based on

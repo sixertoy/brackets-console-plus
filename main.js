@@ -15,8 +15,9 @@ define(function (require, exports, module) {
         PanelManager = brackets.getModule('view/PanelManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
-        CommandManager = brackets.getModule("command/CommandManager"),
+        CommandManager = brackets.getModule('command/CommandManager'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager');
+    ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
     /** ------------------------------------
 
     Globals
@@ -146,6 +147,9 @@ define(function (require, exports, module) {
             if (_.isObject(msg)) {
                 msg = JSON.stringify(msg);
             }
+            if (_.isUndefined(msg)) {
+                msg = 'undefined';
+            }
             var q,
                 ln18 = _.extend(err, {
                     message: msg,
@@ -198,8 +202,6 @@ define(function (require, exports, module) {
      *
      */
     AppInit.htmlReady(function () {
-
-        ExtensionUtils.loadStyleSheet(module, "styles/styles.css");
 
         var minHeight = 100;
         PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, Strings)), minHeight);
@@ -254,21 +256,21 @@ define(function (require, exports, module) {
             _error = console.error;
 
         console.log = function () {
-            var obj = __getErrorObject((new Error).stack),
+            var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             log(msg, obj, 'debug');
             return _log.apply(console, arguments);
         };
 
         console.error = function () {
-            var obj = __getErrorObject((new Error).stack),
+            var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             error(msg, obj);
             return _error.apply(console, arguments);
         };
 
         console.warn = function () {
-            var obj = __getErrorObject((new Error).stack),
+            var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             warn(msg, obj);
             return _warn.apply(console, arguments);

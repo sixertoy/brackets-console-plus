@@ -1,6 +1,11 @@
 brackets-console
 ================
 
-A Brackets extension to see console.log & console.error without developer tools. Very useful for ANT result:
+A Brackets extension to see console.log & console.error in a Brackets Panel
 
-![Screenshot](https://raw.github.com/aghiura/brackets-console/master/screenshot.jpg)
+![Screenshot]()
+
+
+Base on
+v1.2.0 by Alexandru Ghiura & Alain Kalker
+https://github.com/ghalex/brackets-console

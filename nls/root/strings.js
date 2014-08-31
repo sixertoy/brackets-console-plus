@@ -26,8 +26,10 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 /*global define */
 define({
+    // Menus
+    'MENU_NAME': 'Windows',
+    'SHOW_PANEL': 'Show Console',
+    // UI
     'CLEAR_LABEL': 'Clear',
-    'TITLE_PANEL': 'Console',
-    'WINDOWS_MENU': 'Windows',
-    'SHOW_PANEL': 'Show Console'
+    'TITLE_PANEL': 'Console'
 });

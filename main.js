@@ -23,15 +23,16 @@ define(function (require, exports, module) {
     Globals
 
 */
-    var EXTENSION_ID = 'brackets-console',
-        WINDOWS_MENU_ID = EXTENSION_ID + '.windows.menus',
-        SHOWPANEL_COMMAND_ID = EXTENSION_ID + '.showpanel';
+    var PREFIX = 'malas34',
+        EXTENSION_ID = 'brackets-console',
+        WINDOWS_MENU_ID = PREFIX + '-brackets.windows.menus',
+        SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel';
     /** ------------------------------------
 
     UI Templates
 
 */
-    var Strings = require('./ln18'),
+    var ln18 = require('./ln18'),
         RegexUtils = require('./lib/RegexUtils'),
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
@@ -45,7 +46,7 @@ define(function (require, exports, module) {
         warnsCount = 0,
         errorsCount = 0,
         debugPrefs = PreferencesManager.getExtensionPrefs('debug'),
-        extensionPrefs = PreferencesManager.getExtensionPrefs(EXTENSION_ID);
+        extensionPrefs = PreferencesManager.getExtensionPrefs(PREFIX + '.' + EXTENSION_ID);
     /** ------------------------------------
 
     UI Variables
@@ -66,10 +67,10 @@ define(function (require, exports, module) {
      *
      */
     function _updateNotifierIcon() {
-        $('#' + EXTENSION_ID + '-panel .toolbar .warn small em').first().text((warnsCount));
-        $('#' + EXTENSION_ID + '-panel .toolbar .error small em').first().text((errorsCount));
-        $('#' + EXTENSION_ID + '-panel .toolbar .debug small em').first().text((logsCount - (errorsCount + warnsCount)));
-        var $input = $('#brackets-console-button .counts');
+        $('#brackets-console-panel .toolbar .warn small em').first().text((warnsCount));
+        $('#brackets-console-panel .toolbar .error small em').first().text((errorsCount));
+        $('#brackets-console-panel .toolbar .debug small em').first().text((logsCount - (errorsCount + warnsCount)));
+        var $input = $appButton.find('.counts').first();
         $input.toggle(errorsCount > 0);
         $input.find('em').first().text(errorsCount);
     }
@@ -204,46 +205,49 @@ define(function (require, exports, module) {
     AppInit.htmlReady(function () {
 
         var minHeight = 100;
-        PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, Strings)), minHeight);
-        $appPanel = $('#' + EXTENSION_ID + '-panel');
-        $logContainer = $('#' + EXTENSION_ID + '-panel .table-container');
+        PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ln18)), minHeight);
+        $appPanel = $('#brackets-console-panel');
+        $logContainer = $($appPanel.find('.table-container').first());
 
-        var base = '#' + EXTENSION_ID + '-panel .toolbar';
+        var base = '#brackets-console-panel .toolbar';
         $(base + ' .clear').on('click', clearConsole);
-
+        $(base + ' .warn').on('click', _refreshPanel);
+        $(base + ' .error').on('click', _refreshPanel);
+        $(base + ' .debug').on('click', _refreshPanel);
         $(base + ' .close').on('click', _handlerPanelVisibility);
         $(base + ' .title').on('click', _handlerPanelVisibility);
 
-        $(base + ' .error').on('click', _refreshPanel);
-        $(base + ' .debug').on('click', _refreshPanel);
-        $(base + ' .warn').on('click', _refreshPanel);
-
-        $('#main-toolbar .buttons').append(Mustache.render(ButtonHTML, Strings));
-        $appButton = $('#' + EXTENSION_ID + '-button').on('click', _handlerPanelVisibility);
+        $('#main-toolbar .buttons').append(Mustache.render(ButtonHTML, ln18));
+        $appButton = $('#brackets-console-button').on('click', _handlerPanelVisibility);
         $($appButton).find('.counts').first().hide();
 
         _updateNotifierIcon();
 
-
     });
 
-    AppInit.appReady(function () {});
     /** ------------------------------------
 
     Commands and Menus
 
 */
     function __registerCommands() {
-        CommandManager.register("Show Console", SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
+        CommandManager.register(ln18.SHOW_PANEL, SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
     }
-    __registerCommands();
 
 
     function __registerWindowsMenu() {
-        var menu = Menus.addMenu('Windows', WINDOWS_MENU_ID, Menus.AFTER, Menus.AppMenuBar.NAVIGATE_MENU);
+        var menu = Menus.getMenu(WINDOWS_MENU_ID);
+        if (menu === null || menu === undefined) {
+            menu = Menus.addMenu(ln18.MENU_NAME, WINDOWS_MENU_ID, Menus.AFTER, Menus.AppMenuBar.NAVIGATE_MENU);
+        }
         menu.addMenuItem(SHOWPANEL_COMMAND_ID);
     }
-    __registerWindowsMenu();
+
+    AppInit.appReady(function () {
+        __registerCommands();
+        __registerWindowsMenu();
+
+    });
     /** ------------------------------------
 
     Console Proto

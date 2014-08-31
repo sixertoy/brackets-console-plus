@@ -1,8 +1,8 @@
 {
-    "name": "brackets-console",
+    "name": "malas34.brackets-console-plus",
     "title": "Console",
-    "version": "1.2.0",
-    "description": "Shows console.log & console.error without developer tools.",
+    "version": "1.3.0",
+    "description": "Shows console.logs &.errors without leaving Brackets",
     "homepage": "https://github.com/aghiura/brackets-console",
     "author": "Alexandru Ghiura ghalex@gmail.com (https://github.com/ghalex)",
     "license": "MIT",
@@ -15,13 +15,21 @@
         "fr_FR",
         "en_US",
         "en_UK"
-    ]
+    ],
     "files": [
-        "html/console.html",
+        "styles/images/button.svg",
+        "styles/styles.css",
+        "html/button.html",
+        "html/row.html",
+        "html/panel.html",
         "main.js",
-        "README.md"
+        "ln18.js",
+        "nls/strings.js",
+        "nls/fr/strings.js",
+        "nls/root/strings.js",
+        "lib/RegexUtils.js"
     ],
     "engines": {
-        "brackets": ">=0.22.0"
+        "brackets": ">=0.42.0"
     }
 }

@@ -28,8 +28,8 @@
 define({
     // Menus
     'MENU_NAME': 'Windows',
-    'SHOW_PANEL': 'Show Console',
+    'SHOW_PANEL': 'Console Plus',
     // UI
     'CLEAR_LABEL': 'Clear',
-    'TITLE_PANEL': 'Console'
+    'TITLE_PANEL': 'Console Plus'
 });

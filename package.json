@@ -38,5 +38,12 @@
     ],
     "engines": {
         "brackets": ">=0.42.0"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.4",
+        "grunt-cli": "~0.1.13 ",
+        "grunt-contrib-qunit": "~0.5.2",
+        "grunt-contrib-jshint": "~0.6.0",
+        "grunt-contrib-compress": "~0.10.0"
     }
 }

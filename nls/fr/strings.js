@@ -28,7 +28,7 @@
 define({
     // Menus
     'MENU_NAME': 'Fenêtres',
-    'SHOW_PANEL': 'Ouvrir la Console',
+    'SHOW_PANEL': 'Console Plus',
     // UI
     'CLEAR_LABEL': 'Effacer',
     'TITLE_PANEL': 'Console'

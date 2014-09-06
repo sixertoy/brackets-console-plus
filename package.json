@@ -29,9 +29,10 @@
         "html/row.html",
         "html/panel.html",
         "main.js",
-        "ln18.js",
+        "in18.js",
         "nls/strings.js",
         "nls/fr/strings.js",
+        "nls/it/strings.js",
         "nls/root/strings.js",
         "lib/RegexUtils.js"
     ],

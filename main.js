@@ -231,10 +231,6 @@ define(function (require, exports, module) {
 
 */
     function __registerCommands() {
-
-        console.log(ExtensionStrings);
-        console.log(ExtensionStrings.SHOW_PANEL);
-
         CommandManager.register(ExtensionStrings.SHOW_PANEL, SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
     }
 

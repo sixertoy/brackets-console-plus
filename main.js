@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     UI Templates
 
 */
-    var ln18 = require('./ln18'),
+    var ln18 = require('./i18n'),
         RegexUtils = require('./lib/RegexUtils'),
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),

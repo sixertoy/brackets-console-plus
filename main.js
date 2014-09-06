@@ -42,7 +42,8 @@ define(function (require, exports, module) {
     Variables
 
 */
-    var logsCount = 0,
+    var $exceptions = [],
+        logsCount = 0,
         warnsCount = 0,
         errorsCount = 0,
         debugPrefs = PreferencesManager.getExtensionPrefs('debug'),
@@ -55,6 +56,7 @@ define(function (require, exports, module) {
     var $appPanel,
         $appButton,
         $logContainer;
+
     /** ------------------------------------
 
     Private Functions
@@ -244,6 +246,7 @@ define(function (require, exports, module) {
     }
 
     AppInit.appReady(function () {
+
         __registerCommands();
         __registerWindowsMenu();
 
@@ -289,5 +292,24 @@ define(function (require, exports, module) {
         exports.clear = clearConsole;
     }
     __initConsoleWrapper();
+    /** ------------------------------------
+
+    Exceptions
+
+*/
+    function __initExceptionsWrapper() {
+        $(window).on('error', function (event) {
+            var oEvent = event.originalEvent;
+            var obj = {
+                errorStacks: [],
+                lineNumber: oEvent.lineno,
+                fileName: oEvent.filename,
+                columnNumber: oEvent.colno,
+                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
+            };
+            error(oEvent.message, obj);
+        });
+    }
+    __initExceptionsWrapper();
 
 });

@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 
 */
     var PREFIX = 'malas34',
-        EXTENSION_ID = 'brackets-console',
+        EXTENSION_ID = 'brackets-consoleplus',
         WINDOWS_MENU_ID = PREFIX + '-brackets.windows.menus',
         SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel';
     /** ------------------------------------
@@ -32,8 +32,8 @@ define(function (require, exports, module) {
     UI Templates
 
 */
-    var ln18 = require('./i18n'),
-        RegexUtils = require('./lib/RegexUtils'),
+    var ExtensionStrings = require('strings'),
+        RegexUtils = require('lib/RegexUtils'),
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
         ButtonHTML = require('text!htmlContent/button.html');
@@ -152,12 +152,12 @@ define(function (require, exports, module) {
                 msg = 'undefined';
             }
             var q,
-                ln18 = _.extend(err, {
+                str = _.extend(err, {
                     message: msg,
                     even: (logsCount % 2) ? 'odd' : '',
                     type: type
                 }),
-                $row = $(Mustache.render(RowHTML, ln18));
+                $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
             $row.on('click', function () {
                 q = $(this).find('quote');
@@ -205,7 +205,7 @@ define(function (require, exports, module) {
     AppInit.htmlReady(function () {
 
         var minHeight = 100;
-        PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ln18)), minHeight);
+        PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
         $appPanel = $('#brackets-console-panel');
         $logContainer = $($appPanel.find('.table-container').first());
 
@@ -217,7 +217,7 @@ define(function (require, exports, module) {
         $(base + ' .close').on('click', _handlerPanelVisibility);
         $(base + ' .title').on('click', _handlerPanelVisibility);
 
-        $('#main-toolbar .buttons').append(Mustache.render(ButtonHTML, ln18));
+        $('#main-toolbar .buttons').append(Mustache.render(ButtonHTML, ExtensionStrings));
         $appButton = $('#brackets-console-button').on('click', _handlerPanelVisibility);
         $($appButton).find('.counts').first().hide();
 
@@ -231,14 +231,18 @@ define(function (require, exports, module) {
 
 */
     function __registerCommands() {
-        CommandManager.register(ln18.SHOW_PANEL, SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
+
+        console.log(ExtensionStrings);
+        console.log(ExtensionStrings.SHOW_PANEL);
+
+        CommandManager.register(ExtensionStrings.SHOW_PANEL, SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
     }
 
 
     function __registerWindowsMenu() {
         var menu = Menus.getMenu(WINDOWS_MENU_ID);
-        if (menu === null || menu === undefined) {
-            menu = Menus.addMenu(ln18.MENU_NAME, WINDOWS_MENU_ID, Menus.AFTER, Menus.AppMenuBar.NAVIGATE_MENU);
+        if (!menu) {
+            menu = Menus.addMenu(ExtensionStrings.MENU_NAME, WINDOWS_MENU_ID, Menus.AFTER, Menus.AppMenuBar.NAVIGATE_MENU);
         }
         menu.addMenuItem(SHOWPANEL_COMMAND_ID);
     }
@@ -254,6 +258,7 @@ define(function (require, exports, module) {
 
 */
     function __initConsoleWrapper() {
+
         var _log = console.log,
             _warn = console.warn,
             _debug = console.debug,

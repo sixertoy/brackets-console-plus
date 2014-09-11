@@ -13,6 +13,9 @@
             text-transform: capitalize;
             &.active:not([disabled]){
                 color:#333;
+                .dark &{
+                    color: @light;
+                }
             }
         }
     }

@@ -31,5 +31,5 @@ define({
     'SHOW_PANEL': 'Console Plus',
     // UI
     'CLEAR_LABEL': 'Effacer',
-    'TITLE_PANEL': 'Console'
+    'TITLE_PANEL': 'Console Plus'
 });

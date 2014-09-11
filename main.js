@@ -34,6 +34,7 @@ define(function (require, exports, module) {
 */
     var ExtensionStrings = require('strings'),
         RegexUtils = require('lib/RegexUtils'),
+        CircularJSON = require('lib/CircularJSON'),
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
         ButtonHTML = require('text!htmlContent/button.html');
@@ -146,11 +147,9 @@ define(function (require, exports, module) {
         if ($logContainer !== null) {
             logsCount++;
 
-            if (_.isObject(msg)) {
-                msg = JSON.stringify(msg);
+            if (_.isPlainObject(msg)) {
+                msg = CircularJSON.stringify(msg);
             }
-
-
 
             if (_.isUndefined(msg)) {
                 msg = 'undefined';

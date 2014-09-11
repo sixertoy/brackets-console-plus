@@ -16,6 +16,7 @@ module.exports = function (grunt) {
                         'HISTORY.md',
 
                         'lib/RegexUtils.js',
+                        'lib/CircularJSON.js',
 
                         'htmlContent/row.html',
                         'htmlContent/panel.html',
@@ -40,7 +41,7 @@ module.exports = function (grunt) {
             files: []
         },
         jshint: {
-            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/RegexUtils.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
+            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/RegexUtils.js', 'lib/CircularJSON.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
         }
     });
 

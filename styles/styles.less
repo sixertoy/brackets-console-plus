@@ -1,89 +1,105 @@
 // out: styles.css, compress: true, strictMath: true
-@dark:#3C3F41;
-@light-dark:#444749;
-@selected:rgba(45, 46, 48, 1);/*#2d2e30;*/
-@selected-border-top:rgba(0,0,0,0.12);
-@selected-border-bottom:rgba(255,255,255,0.12);
 @light: #fff;
 @red:#f74687;
-@blue: #8fddff;
+@blue:#8fddff;
+@orange:#ff6500;
 @icon:'images/button.svg';
-@shadow: rgba(0, 0, 0, 0.498039) 0px 1px 2px;
-@orange:#FF6500;
-@green:#ACE539;
-@grey:#999580;
-#brackets-console-panel{
-    &.bottom-panel{
-        border:0;
-        color:@light;
-        text-shadow: @shadow;
-        button{ cursor: pointer; }
-        .toolbar{
-            padding-top:4px;
-            background:@dark;
-            padding-bottom:2px;
-            text-align: center;
-            .title {
-                color:@grey;
-                cursor:pointer;
-                text-align: left;
-                line-height: 24px;
-                padding-left: 30px;
-                background: url(@icon) no-repeat left top transparent;
+
+#brackets-console-panel {
+    .filters{
+        margin: 0 auto;
+        .btn{
+            cursor: pointer;
+            text-transform: capitalize;
+            &.active:not([disabled]){
+                color:#333;
             }
-            .close{
-                color:@blue;
-                padding:0 10px;
-                text-align: center;
-            }
-            .filters{
-                margin: 0 auto;
-                > *{
-                    color:@light;
-                    border:0;
-                    height: 100%;
-                    border-radius:0;
-                    margin-right: 0;
-                    margin-left: 1px;
-                    padding: 5px 17px;
-                    background: fadeout(@selected, 75%);
-                    border-top: 1px solid @selected-border-top;
-                    border-bottom: 1px solid @selected-border-bottom;
-                    &:hover{
-                        color:@blue;
-                        background-color: @selected;
+        }
+    }
+    .box{
+        box-sizing: border-box;
+        margin:0;
+        width: 100%;
+        display: block;
+        .row{
+            box-sizing: border-box;
+            width: 100%;
+            float: none;
+            display: block;
+            margin-left: 0;
+            margin-bottom: 1px;
+            > span{
+                box-sizing: border-box;
+                width: 100%;
+                display: block;
+                padding:7px 12px;
+                position: relative;
+                background-color: rgba(0, 0, 0, 0.05);
+                > a{
+                    top: 8px;
+                    right: 12px;
+                    width: auto;
+                    color: @light;
+                    padding: 0 12px;
+                    border-radius: 4px;
+                    position: absolute;
+                }
+                quote{
+                    box-sizing: border-box;
+                    width: 100%;
+                    padding: 20px;
+                    display: block;
+                    margin-top: 7px;
+                    border-radius: 4px;
+                    background-color: rgba(0, 0, 0, 0.05);
+                    > span{
+                        display: block;
+                        margin-bottom: 7px;
                     }
-                    &.active{
-                        color:@blue;
-                        background:@selected;
-                    }
-                    &.clear{
-                        color:@light;
-                        background:fadeout(@selected, 35%);
-                        &:hover{
-                            color:@red;
-                            background:@selected;
+                    .stacks{
+                        display: block;
+                        small{
+                            display: block;
+                            font-size: 0.9em;
                         }
                     }
                 }
             }
-        }
-        .table-container{
-            overflow-y: auto;
-            position: relative;
-            overflow-x: hidden;
-            background:@light-dark;
-            .box{
-                top:0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                display: block;
-                position: absolute;
+            &.odd{
+                > span{
+                    background-color: rgba(0, 0, 0, 0);
+                }
+            }
+            &.error{
+                > span{
+                    border-left:3px solid @red;
+                    > span{ color: @red; }
+                    > a{
+                        background-color: @red;
+                    }
+                }
+            }
+            &.warn{
+                > span{
+                    border-left:3px solid @orange;
+                    > span{ color: @orange; }
+                    > a{
+                        background-color: @orange;
+                    }
+                }
+            }
+            &.debug{
+                > span{
+                    border-left:3px solid rgba(0, 0, 0, 0.15);
+                    > a{
+                        background-color: rgba(0, 0, 0, 0.15);
+                    }
+                }
             }
         }
     }
 }
+
 #brackets-console-button {
     position: relative;
     background: url(@icon) no-repeat center top transparent;
@@ -91,110 +107,19 @@
         background-position: center bottom;
     }
     .counts{
-
         top:12px;
         left:12px;
         position: absolute;
-
         border:0;
         width:13px;
         height:13px;
         color:@light;
-        display: block;
+        display: none;
         background:@red;
         font-size: 0.75em;
         line-height: 1.2em;
         text-align: center;
         border-radius:10px;
         text-indent:-0.15em;
-
-        display: none;
-
-    }
-}
-/** --------------------------------
- *
- * Specific
- *
- */
-#brackets-console-panel{
-    ul{
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-    }
-    .box{
-        clear:both;
-        .line{
-            clear:both;
-            width: 100%;
-            overflow: hidden;
-            > span{
-                color:@light;
-                display: block;
-                padding:7px 7px;
-                font-size: 0.9em;
-                margin-bottom:1px;
-                line-height: 1.1em;
-                position: relative;
-                border-left: 3px solid fadeout(@selected, 75%);
-                > *{
-                    color:@light;
-                    display: block;
-                }
-                a{
-                    top:5px;
-                    right:5px;
-                    display: block;
-                    padding:2px 5px;
-                    position: absolute;
-
-                    border:0;
-                    color:@light;
-                    border-radius:10px;
-                    text-decoration: none;
-                    background: fadeout(@selected, 75%);
-                    &:hover,
-                    &:active{
-                        text-decoration: none;
-                    }
-                }
-                quote{
-                    color:@light;
-                    display: block;
-                    margin-top: 10px;
-                    border-radius:4px;
-                    position: relative;
-                    padding:10px 10px 10px 10px;
-                    background:lighten(@light-dark, 5%);
-                    & b{ color:@light !important; }
-                    & > *{
-                        color:@light;
-                        display: block;
-                        margin-top:3px;
-                        position:relative;
-                    }
-                    .stacks{
-                        padding-left:10px;
-                        > *{
-                            display: block;
-                        }
-                    }
-                }
-            }
-            &.odd{
-                background:rgba(0, 0, 0, 0.05);
-            }
-            &.error > span{
-                > span{
-                    color:@red;
-                }
-                a{
-                    color:@light;
-                    background: @red;
-                }
-                border-left: 3px solid @red;
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-<li class="line {{even}} {{type}}">
+<li class="row {{even}} {{type}}">
     <span>
         <span>{{message}}</span>
         {{#shortFileName}}
@@ -6,8 +6,10 @@
         {{/shortFileName}}
         <quote>
             {{#fileName}}
-            <b>{{fileName}}</b>
-            <em>at line: <b>{{lineNumber}}</b>, column: <b>{{columnNumber}}</b></em>
+            <span>
+                <b>{{fileName}}</b>
+                <em>at line: <b>{{lineNumber}}</b>, column: <b>{{columnNumber}}</b></em>
+            </span>
             {{/fileName}}
             <span class="stacks">
             {{#errorStacks}}

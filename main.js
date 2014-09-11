@@ -92,11 +92,9 @@ define(function (require, exports, module) {
 
     function _refreshPanel(event) {
         var $this = $(event.currentTarget);
-
         $logContainer.find('.box > *').show();
-
         var child = $this.parent().find('.active').first();
-        if (child !== null) {
+        if (!_.isNull(child) && !_.isUndefined(child)) {
             child.removeClass('active');
         }
         if (child.data('name') !== $this.data('name')) {
@@ -145,9 +143,13 @@ define(function (require, exports, module) {
     function log(msg, err, type) {
         if ($logContainer !== null) {
             logsCount++;
+
             if (_.isObject(msg)) {
                 msg = JSON.stringify(msg);
             }
+
+
+
             if (_.isUndefined(msg)) {
                 msg = 'undefined';
             }

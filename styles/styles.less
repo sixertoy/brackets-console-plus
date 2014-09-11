@@ -1,0 +1,125 @@
+// out: styles.css, compress: true, strictMath: true
+@light: #fff;
+@red:#f74687;
+@blue:#8fddff;
+@orange:#ff6500;
+@icon:'images/button.svg';
+
+#brackets-console-panel {
+    .filters{
+        margin: 0 auto;
+        .btn{
+            cursor: pointer;
+            text-transform: capitalize;
+            &.active:not([disabled]){
+                color:#333;
+            }
+        }
+    }
+    .box{
+        box-sizing: border-box;
+        margin:0;
+        width: 100%;
+        display: block;
+        .row{
+            box-sizing: border-box;
+            width: 100%;
+            float: none;
+            display: block;
+            margin-left: 0;
+            margin-bottom: 1px;
+            > span{
+                box-sizing: border-box;
+                width: 100%;
+                display: block;
+                padding:7px 12px;
+                position: relative;
+                background-color: rgba(0, 0, 0, 0.05);
+                > a{
+                    top: 8px;
+                    right: 12px;
+                    width: auto;
+                    color: @light;
+                    padding: 0 12px;
+                    border-radius: 4px;
+                    position: absolute;
+                }
+                quote{
+                    box-sizing: border-box;
+                    width: 100%;
+                    padding: 20px;
+                    display: block;
+                    margin-top: 7px;
+                    border-radius: 4px;
+                    background-color: rgba(0, 0, 0, 0.05);
+                    > span{
+                        display: block;
+                        margin-bottom: 7px;
+                    }
+                    .stacks{
+                        display: block;
+                        small{
+                            display: block;
+                            font-size: 0.9em;
+                        }
+                    }
+                }
+            }
+            &.odd{
+                > span{
+                    background-color: rgba(0, 0, 0, 0);
+                }
+            }
+            &.error{
+                > span{
+                    border-left:3px solid @red;
+                    > span{ color: @red; }
+                    > a{
+                        background-color: @red;
+                    }
+                }
+            }
+            &.warn{
+                > span{
+                    border-left:3px solid @orange;
+                    > span{ color: @orange; }
+                    > a{
+                        background-color: @orange;
+                    }
+                }
+            }
+            &.debug{
+                > span{
+                    border-left:3px solid rgba(0, 0, 0, 0.15);
+                    > a{
+                        background-color: rgba(0, 0, 0, 0.15);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#brackets-console-button {
+    position: relative;
+    background: url(@icon) no-repeat center top transparent;
+    &.active{
+        background-position: center bottom;
+    }
+    .counts{
+        top:12px;
+        left:12px;
+        position: absolute;
+        border:0;
+        width:13px;
+        height:13px;
+        color:@light;
+        display: none;
+        background:@red;
+        font-size: 0.75em;
+        line-height: 1.2em;
+        text-align: center;
+        border-radius:10px;
+        text-indent:-0.15em;
+    }
+}

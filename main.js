@@ -9,7 +9,7 @@ define(function (require, exports, module) {
 
 */
     var _ = brackets.getModule('thirdparty/lodash'),
-        Menus = brackets.getModule("command/Menus"),
+        Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         PanelManager = brackets.getModule('view/PanelManager'),
@@ -33,8 +33,8 @@ define(function (require, exports, module) {
 
 */
     var ExtensionStrings = require('strings'),
-        RegexUtils = require('lib/RegexUtils'),
-        CircularJSON = require('lib/CircularJSON'),
+        RegexUtils = require('lib/regex-utils'),
+        CircularJSON = require('lib/circular-json'),
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
         ButtonHTML = require('text!htmlContent/button.html');
@@ -148,7 +148,8 @@ define(function (require, exports, module) {
             logsCount++;
 
             if (_.isPlainObject(msg)) {
-                msg = CircularJSON.stringify(msg);
+                msg = 'yo';
+                // msg = CircularJSON.stringify(msg);
             }
 
             if (_.isUndefined(msg)) {

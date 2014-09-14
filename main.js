@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, console, brackets, _, $, Mustache */
+/*global define, console, brackets, _, $, Mustache, window, document */
 define(function (require, exports, module) {
 
     'use strict';
@@ -252,6 +252,8 @@ define(function (require, exports, module) {
         __registerCommands();
         __registerWindowsMenu();
 
+        console.log($exceptions);
+
     });
     /** ------------------------------------
 
@@ -292,14 +294,36 @@ define(function (require, exports, module) {
         exports.warn = warn;
         exports.error = error;
         exports.clear = clearConsole;
+
     }
     __initConsoleWrapper();
     /** ------------------------------------
 
-    Exceptions
+    Window Error & Exceptions
 
 */
-    function __initExceptionsWrapper() {
+    /*
+    var _windowConsoleError = window.console.error;
+    function __initWindowConsoleErrorWrapper() {
+        window.console.error = function(){
+            var oEvent = {};
+                oEvent.fileName = 'ttotototo.text';
+            var obj = {
+                errorStacks: [],
+                lineNumber: 0, // oEvent.lineno,
+                fileName: oEvent.filename,
+                columnNumber: 0, // oEvent.colno,
+                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
+            };
+            $exceptions.push('yo');
+            error(oEvent.fileName, obj);
+            return _windowConsoleError.apply(window.console, arguments);
+        };
+    }
+    __initWindowConsoleErrorWrapper();
+    */
+
+    function __initWindowErrorWrapper() {
         $(window).on('error', function (event) {
             var oEvent = event.originalEvent;
             var obj = {
@@ -311,7 +335,8 @@ define(function (require, exports, module) {
             };
             error(oEvent.message, obj);
         });
+
     }
-    __initExceptionsWrapper();
+    __initWindowErrorWrapper();
 
 });

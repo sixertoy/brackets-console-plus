@@ -23,14 +23,14 @@
         "it"
     ],
     "files": [
+        "package.json",
         "styles/images/button.svg",
         "styles/styles.css",
-        "html/button.html",
-        "html/row.html",
-        "html/panel.html",
+        "htmlContent/button.html",
+        "htmlContent/row.html",
+        "htmlContent/panel.html",
         "main.js",
         "strings.js",
-        "screenshot.jpg",
         "nls/strings.js",
         "nls/fr/strings.js",
         "nls/it/strings.js",

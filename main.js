@@ -334,15 +334,15 @@ define(function (require, exports, module) {
     Window Error & Exceptions
 
 */
-    // var _windowConsoleError = $(window).console.error;
+    /*
+    var _windowConsoleError = $(window).console.error;
     function __initWindowConsoleErrorWrapper() {
-        /*
         $(window).console.error = function(){
             return _windowConsoleError.apply(window.console, arguments);
         }
-        */
     }
     __initWindowConsoleErrorWrapper();
+    */
     /*
         window.console.error = function(){
             var oEvent = {};

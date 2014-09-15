@@ -29,13 +29,14 @@
         "html/row.html",
         "html/panel.html",
         "main.js",
-        "in18.js",
+        "strings.js",
+        "screenshot.jpg",
         "nls/strings.js",
         "nls/fr/strings.js",
         "nls/it/strings.js",
         "nls/root/strings.js",
-        "lib/RegexUtils.js",
-        "lib/CircularJSON.js"
+        "lib/regex-utils.js",
+        "lib/circular-json.js"
     ],
     "engines": {
         "brackets": ">=0.42.0"

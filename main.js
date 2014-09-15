@@ -143,21 +143,21 @@ define(function (require, exports, module) {
         _updateNotifierIcon();
     }
 
-    function _logObject(obj){
+    function _logObject(obj) {
         var msg = '';
-        try{
+        try {
             msg = JSON.stringify(obj);
             return msg;
-        } catch(e){
+        } catch (e) {
             msg = '[Object object] Circular JSON';
-            return msg
+            return msg;
         }
     }
 
-    function _logArray(arr){
+    function _logArray(arr) {
         var i = 0, msg = '';
-        for ( i = 0; i < arr.length; i++){
-            if (_.isString(arr[i]) || _.isNumber(arr[i]) || _.isNull(arr[i]) || _.isUndefined(arr[i])){
+        for (i = 0; i < arr.length; i++) {
+            if (_.isString(arr[i]) || _.isNumber(arr[i]) || _.isNull(arr[i]) || _.isUndefined(arr[i])) {
                 msg += arr[i];
             } else if (_.isArray(arr[i])) {
                 msg += _logArray(arr[i]);

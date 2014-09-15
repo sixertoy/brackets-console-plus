@@ -143,23 +143,55 @@ define(function (require, exports, module) {
         _updateNotifierIcon();
     }
 
+    function _logObject(obj){
+        var msg = '';
+        try{
+            msg = JSON.stringify(obj);
+            return msg;
+        } catch(e){
+            msg = '[Object object] Circular JSON';
+            return msg
+        }
+    }
+
+    function _logArray(arr){
+        var i = 0, msg = '';
+        for ( i = 0; i < arr.length; i++){
+            if (_.isString(arr[i]) || _.isNumber(arr[i]) || _.isNull(arr[i]) || _.isUndefined(arr[i])){
+                msg += arr[i];
+            } else if (_.isArray(arr[i])) {
+                msg += _logArray(arr[i]);
+            } else if (_.isPlainObject(arr[i])) {
+                msg += _logObject(arr[i]);
+            }
+            msg +=  '\r\n';
+        }
+        return msg;
+    }
+
     function log(msg, err, type) {
         if ($logContainer !== null) {
             logsCount++;
 
-            if (_.isPlainObject(msg)) {
-                msg = 'yo';
-                // msg = CircularJSON.stringify(msg);
+            if (!_.isString(type)) {
+                type = 'debug';
             }
 
-            if (_.isUndefined(msg)) {
+            if (_.isArray(msg)) {
+                msg = _logArray(msg);
+            } else if (_.isPlainObject(msg)) {
+                msg = _logObject(msg);
+            } else if (_.isUndefined(msg)) {
                 msg = 'undefined';
+            } else if (_.isNull(msg)) {
+                msg = 'null';
             }
+
             var q,
                 str = _.extend(err, {
+                    type: type,
                     message: msg,
-                    even: (logsCount % 2) ? 'odd' : '',
-                    type: type
+                    even: (logsCount % 2) ? 'odd' : ''
                 }),
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
@@ -171,8 +203,10 @@ define(function (require, exports, module) {
                     $(q).show().css('display', 'block'); // Display block fix;
                 }
             });
+
             $row.find('quote').first().hide();
             _updateNotifierIcon();
+
         }
     }
 
@@ -252,8 +286,6 @@ define(function (require, exports, module) {
         __registerCommands();
         __registerWindowsMenu();
 
-        console.log($exceptions);
-
     });
     /** ------------------------------------
 
@@ -270,7 +302,7 @@ define(function (require, exports, module) {
         console.log = function () {
             var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
-            log(msg, obj, 'debug');
+            log(msg, obj);
             return _log.apply(console, arguments);
         };
 
@@ -302,9 +334,16 @@ define(function (require, exports, module) {
     Window Error & Exceptions
 
 */
-    /*
-    var _windowConsoleError = window.console.error;
+    // var _windowConsoleError = $(window).console.error;
     function __initWindowConsoleErrorWrapper() {
+        /*
+        $(window).console.error = function(){
+            return _windowConsoleError.apply(window.console, arguments);
+        }
+        */
+    }
+    __initWindowConsoleErrorWrapper();
+    /*
         window.console.error = function(){
             var oEvent = {};
                 oEvent.fileName = 'ttotototo.text';
@@ -319,8 +358,6 @@ define(function (require, exports, module) {
             error(oEvent.fileName, obj);
             return _windowConsoleError.apply(window.console, arguments);
         };
-    }
-    __initWindowConsoleErrorWrapper();
     */
 
     function __initWindowErrorWrapper() {

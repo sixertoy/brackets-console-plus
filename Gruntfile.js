@@ -8,30 +8,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: [
-                        'main.js',
-                        'package.json',
-
-                        'README.md',
-                        'HISTORY.md',
-
-                        'lib/RegexUtils.js',
-                        'lib/CircularJSON.js',
-
-                        'htmlContent/row.html',
-                        'htmlContent/panel.html',
-                        'htmlContent/button.html',
-
-                        'strings.js',
-                        'nls/strings.js',
-                        'nls/it/strings.js',
-                        'nls/fr/strings.js',
-                        'nls/root/strings.js',
-
-                        'styles/styles.css',
-                        'styles/images/button.svg',
-                        'styles/images/licence.txt'
-                    ],
+                        src: '<%= pkg.files %>',
                         dest: 'malas34.brackets-console-plus/'
                     }
                 ]
@@ -41,7 +18,7 @@ module.exports = function (grunt) {
             files: []
         },
         jshint: {
-            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/RegexUtils.js', 'lib/CircularJSON.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
+            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/regex-utils.js', 'lib/circular-json.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
         }
     });
 

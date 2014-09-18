@@ -1,7 +1,7 @@
 {
     "name": "malas34.brackets-console-plus",
     "title": "Console Plus",
-    "version": "1.3.9",
+    "version": "1.3.10",
     "description": "Shows console.logs &.errors without leaving Brackets. + Toolbar Icon & Notifier, Filters by logs/errors, Errors stacks details and.... a very nice look + Update: log window object error",
     "homepage": "https://github.com/malas34/brackets-console-plus",
     "author": {

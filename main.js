@@ -12,6 +12,7 @@ define(function (require, exports, module) {
         Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
+        Commands = brackets.getModule('command/Commands'),
         PanelManager = brackets.getModule('view/PanelManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
@@ -25,7 +26,6 @@ define(function (require, exports, module) {
 */
     var PREFIX = 'malas34',
         EXTENSION_ID = 'brackets-consoleplus',
-        WINDOWS_MENU_ID = PREFIX + '-brackets.windows.menus',
         SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel';
     /** ------------------------------------
 
@@ -274,11 +274,8 @@ define(function (require, exports, module) {
 
 
     function __registerWindowsMenu() {
-        var menu = Menus.getMenu(WINDOWS_MENU_ID);
-        if (!menu) {
-            menu = Menus.addMenu(ExtensionStrings.MENU_NAME, WINDOWS_MENU_ID, Menus.AFTER, Menus.AppMenuBar.NAVIGATE_MENU);
-        }
-        menu.addMenuItem(SHOWPANEL_COMMAND_ID);
+        var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
+        menu.addMenuItem(SHOWPANEL_COMMAND_ID, 'CTRL-F12', Menus.AFTER, Commands.VIEW_TOGGLE_INSPECTION);
     }
 
     AppInit.appReady(function () {

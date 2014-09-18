@@ -27,8 +27,7 @@
 /*global define */
 define({
     // Menus
-    'MENU_NAME': 'Fenêtres',
-    'SHOW_PANEL': 'Console Plus',
+    'SHOW_PANEL': 'Show Console Plus',
     // UI
     'CLEAR_LABEL': 'Effacer',
     'TITLE_PANEL': 'Console Plus'

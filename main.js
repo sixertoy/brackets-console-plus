@@ -17,6 +17,7 @@ define(function (require, exports, module) {
         EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         CommandManager = brackets.getModule('command/CommandManager'),
+        FileViewController = brackets.getModule('project/FileViewController'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager');
     ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
     /** ------------------------------------
@@ -120,7 +121,9 @@ define(function (require, exports, module) {
 
         var lineAndColumn = traces[1].match(RegexUtils.lineAndColumn());
         var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0] : '' : '';
+        // if (line.length > 0) line = line.substr(1);
         var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1] : '' : '';
+        // if (column.length > 0) line = column.substr(1);
 
         return {
             fileName: file,
@@ -135,12 +138,42 @@ define(function (require, exports, module) {
     Console Functions
 
 */
-    function clearConsole() {
-        $logContainer.find('.box').html('');
-        logsCount = 0;
-        warnsCount = 0;
-        errorsCount = 0;
-        _updateNotifierIcon();
+
+    function _removeListenersToRowElements() {
+
+        $logContainer.find('.box .row > span').off('click');
+        $logContainer.find('.box .row a').off('click');
+
+    }
+
+    function _addListenersToRowElements($row) {
+        $row.find('span').first().on('click', function(){
+            var q = $(this).find('quote');
+            if ($(q).is(':visible')) {
+                $(q).hide();
+            } else {
+                $(q).show().css('display', 'block'); // Display block fix;
+            }
+        });
+        $row.find('a').first().on('click', function(event){
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var line = $(this).data('line');
+            var path = $(this).data('file').substr(8); // @TOOD caused by file:/// protocol
+            FileViewController.addToWorkingSetAndSelect(path)
+                .done(function(doc){
+                    if (!_.isNull(doc)){
+                        EditorManager.focusEditor();
+                        /*
+                        if (!_.isNull(line)){
+                            EditorManager.getActiveEditor().setCursorPos(line, 0, true);
+                        }
+                        */
+                    }
+                })
+                .fail(function(err){
+                });
+        });
     }
 
     function _logObject(obj) {
@@ -195,15 +228,7 @@ define(function (require, exports, module) {
                 }),
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
-            $row.on('click', function () {
-                q = $(this).find('quote');
-                if ($(q).is(':visible')) {
-                    $(q).hide();
-                } else {
-                    $(q).show().css('display', 'block'); // Display block fix;
-                }
-            });
-
+            _addListenersToRowElements($row);
             $row.find('quote').first().hide();
             _updateNotifierIcon();
 
@@ -223,6 +248,16 @@ define(function (require, exports, module) {
             log(msg, err, 'error');
         }
     }
+
+    function clearConsole() {
+        _removeListenersToRowElements();
+        $logContainer.find('.box').html('');
+        logsCount = 0;
+        warnsCount = 0;
+        errorsCount = 0;
+        _updateNotifierIcon();
+    }
+
     /** ------------------------------------
 
     Extension Inits

@@ -1,9 +1,11 @@
 <li class="row {{even}} {{type}}">
     <span>
-        <span>{{message}}</span>
+        <strong>{{message}}</strong>
+        {{#fileName}}
         {{#shortFileName}}
-        <a href="#" title="Open details">{{shortFileName}}</a>
+        <a href="" data-file="{{fileName}}" data-line="{{lineNumber}}" title="Open details">{{shortFileName}}</a>
         {{/shortFileName}}
+        {{/fileName}}
         <quote>
             {{#fileName}}
             <span>

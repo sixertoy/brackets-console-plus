@@ -9,6 +9,10 @@
         "email": "malas34.github@gmail.com",
         "url": "https://github.com/malas34"
     },
+    "repository": {
+        "url": "https://github.com/malas34/brackets-console-plus",
+        "type": "git"
+    },
     "license": "MIT",
     "categories":"general",
     "keywords": [

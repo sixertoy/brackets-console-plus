@@ -35,8 +35,10 @@ define(function (require, exports, module) {
 */
     var ExtensionStrings = require('strings'),
         RegexUtils = require('lib/regex-utils'),
-        CircularJSON = require('lib/circular-json'),
-        RowHTML = require('text!htmlContent/row.html'),
+        ObjectUtils = require('lib/object-utils'),
+        CircularJSON = require('lib/circular-json');
+
+    var RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
         ButtonHTML = require('text!htmlContent/button.html');
     /** ------------------------------------
@@ -177,29 +179,72 @@ define(function (require, exports, module) {
     }
 
     function _logObject(obj) {
-        var msg = '';
+
+        var v,
+            p = '',
+            t = '\t',
+            msg = '',
+            le = '\r\n';
+
         try {
-            msg = JSON.stringify(obj);
+            // msg = JSON.stringify(obj);
+            // @TODO isDate isFinite isNaN isRegExp isEmpty isElement
+            msg = '{';
+            for( var prop in obj){
+                if (obj.hasOwnProperty(prop)) {
+                    v = obj[prop];
+                    if (_.isObject(v)) {
+                        if (_.isArray(v) || _.isArguments(v)) {
+                            msg += p + prop + ': ' + _logArray(v);
+
+                        } else if (_.isFunction(v)) {
+                            msg += p + prop + ': [Function]';
+
+                        } else if (_.isPlainObject(v)) {
+                            if (!ObjectUtils.equals(v, obj)) {
+                                msg += p + prop + ': ' + _logObject(v);
+                            } else {
+                                msg += p + prop + ': [Circular]';
+                            }
+
+                        }
+                    } else {
+                    // if (_.isString(v) || _.isNumber(v) || _.isNull(v) || _.isUndefined(v) || _.isBoolean(v)) {
+                        if (_.isString(v)){
+                            msg += p + prop + ': \'' + v + '\'';
+                        } else {
+                            msg += p + prop + ': ' + v;
+                        }
+                    }
+
+                }
+                p = ', ';
+
+            }
+            msg += '}';
             return msg;
+
         } catch (e) {
-            msg = '[Object object] Circular JSON';
-            return msg;
+            return '[Circular]';
+
         }
     }
 
     function _logArray(arr) {
-        var i = 0, msg = '';
+        var i = 0, msg = '', p = '', v;
+
         for (i = 0; i < arr.length; i++) {
-            if (_.isString(arr[i]) || _.isNumber(arr[i]) || _.isNull(arr[i]) || _.isUndefined(arr[i])) {
-                msg += arr[i];
-            } else if (_.isArray(arr[i])) {
-                msg += _logArray(arr[i]);
-            } else if (_.isPlainObject(arr[i])) {
-                msg += _logObject(arr[i]);
+            v = arr[i];
+            if (_.isArray(v)) {
+                msg += p + _logArray(v);
+
+            } else {
+                msg += p + _logObject(v);
+
             }
-            msg +=  '\r\n';
+            p = ', ';
         }
-        return msg;
+        return '[' + msg + ']';
     }
 
     function log(msg, err, type) {
@@ -210,14 +255,23 @@ define(function (require, exports, module) {
                 type = 'debug';
             }
 
-            if (_.isArray(msg)) {
-                msg = _logArray(msg);
-            } else if (_.isPlainObject(msg)) {
-                msg = _logObject(msg);
+            if (_.isObject(msg)){
+                if (_.isArray(msg)) {
+                    msg = _logArray(msg);
+
+                } else if (_.isPlainObject(msg) || _.isObject(msg)) {
+                    msg = _logObject(msg);
+
+                }
+
             } else if (_.isUndefined(msg)) {
                 msg = 'undefined';
+
             } else if (_.isNull(msg)) {
                 msg = 'null';
+
+            } else {
+                msg = msg;
             }
 
             var q,

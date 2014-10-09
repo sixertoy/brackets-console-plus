@@ -1,5 +1,11 @@
+#### v1.4.1
+
+Click on file's name open file in brackets
+Brackets 0.44 API update
+
 #### v1.4.0
 
+Version
 
 #### v1.3.10
 

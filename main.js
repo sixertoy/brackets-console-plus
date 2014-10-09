@@ -9,13 +9,14 @@ define(function (require, exports, module) {
 
 */
     var _ = brackets.getModule('thirdparty/lodash'),
+        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
         PanelManager = brackets.getModule('view/PanelManager'),
-        EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
+        MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager');
     ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
@@ -85,11 +86,11 @@ define(function (require, exports, module) {
      *
      */
     function _handlerPanelVisibility() {
-        $appButton.toggleClass('active');
         Resizer.toggle($appPanel);
+        $appButton.toggleClass('active');
         CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked($appButton.hasClass('active'));
         if (!$appButton.hasClass('active')) {
-            EditorManager.focusEditor();
+            MainViewManager.focusActivePane();
         }
     }
 
@@ -119,8 +120,8 @@ define(function (require, exports, module) {
         var shortFile = file !== '' ? file.split('/')[file.split('/').length - 1] : '';
 
         var lineAndColumn = traces[1].match(RegexUtils.lineAndColumn());
-        var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0] : '' : '';
-        var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1] : '' : '';
+        var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0].substr(1) : '0' : '0';
+        var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1].substr(1) : '0' : '0';
 
         return {
             fileName: file,
@@ -148,9 +149,11 @@ define(function (require, exports, module) {
         try {
             msg = JSON.stringify(obj);
             return msg;
+
         } catch (e) {
             msg = '[Object object] Circular JSON';
             return msg;
+
         }
     }
 
@@ -159,10 +162,13 @@ define(function (require, exports, module) {
         for (i = 0; i < arr.length; i++) {
             if (_.isString(arr[i]) || _.isNumber(arr[i]) || _.isNull(arr[i]) || _.isUndefined(arr[i])) {
                 msg += arr[i];
+
             } else if (_.isArray(arr[i])) {
                 msg += _logArray(arr[i]);
+
             } else if (_.isPlainObject(arr[i])) {
                 msg += _logObject(arr[i]);
+
             }
             msg +=  '\r\n';
         }
@@ -175,16 +181,21 @@ define(function (require, exports, module) {
 
             if (!_.isString(type)) {
                 type = 'debug';
+
             }
 
             if (_.isArray(msg)) {
                 msg = _logArray(msg);
+
             } else if (_.isPlainObject(msg)) {
                 msg = _logObject(msg);
+
             } else if (_.isUndefined(msg)) {
                 msg = 'undefined';
+
             } else if (_.isNull(msg)) {
                 msg = 'null';
+
             }
 
             var q,
@@ -195,18 +206,20 @@ define(function (require, exports, module) {
                 }),
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
-            $row.on('click', function () {
-                q = $(this).find('quote');
+            $row.find('a').first().on('click', function () {
+                var l = parseFloat($(this).data('location'));
+                GotoAgent.open($(this).data('url'), 0);
+            });
+            $row.find('.message').first().on('click', function () {
+                q = $(this).parent().find('quote');
                 if ($(q).is(':visible')) {
                     $(q).hide();
                 } else {
                     $(q).show().css('display', 'block'); // Display block fix;
                 }
             });
-
             $row.find('quote').first().hide();
             _updateNotifierIcon();
-
         }
     }
 
@@ -244,6 +257,7 @@ define(function (require, exports, module) {
 
         var minHeight = 100;
         PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
+        // WorkspaceManager.createBottomPanel
         $appPanel = $('#brackets-console-panel');
         $logContainer = $($appPanel.find('.table-container').first());
 

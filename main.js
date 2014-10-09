@@ -421,31 +421,20 @@ define(function (require, exports, module) {
     Window Error & Exceptions
 
 */
-    /*
-    var _windowConsoleError = $(window).console.error;
+
+    // var _windowConsoleError = $(window).console.error;
     function __initWindowConsoleErrorWrapper() {
-        $(window).console.error = function(){
-            return _windowConsoleError.apply(window.console, arguments);
-        }
+        var _orig = window.console.error;
+
+        window.console.error = function(){
+            // console.log('__initWindowConsoleErrorWrapper');
+            // console.log(arguments);
+            return _orig.apply(window.console, arguments);
+
+        };
+
     }
     __initWindowConsoleErrorWrapper();
-    */
-    /*
-        window.console.error = function(){
-            var oEvent = {};
-                oEvent.fileName = 'ttotototo.text';
-            var obj = {
-                errorStacks: [],
-                lineNumber: 0, // oEvent.lineno,
-                fileName: oEvent.filename,
-                columnNumber: 0, // oEvent.colno,
-                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
-            };
-            $exceptions.push('yo');
-            error(oEvent.fileName, obj);
-            return _windowConsoleError.apply(window.console, arguments);
-        };
-    */
 
     function __initWindowErrorWrapper() {
         $(window).on('error', function (event) {

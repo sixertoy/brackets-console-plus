@@ -92,7 +92,8 @@ define(function (require, exports, module) {
         Resizer.toggle($appPanel);
         CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked($appButton.hasClass('active'));
         if (!$appButton.hasClass('active')) {
-            EditorManager.focusEditor();
+            // EditorManager.focusEditor();
+            // MainViewManager.currentDocumentChange();
         }
     }
 

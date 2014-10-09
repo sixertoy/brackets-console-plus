@@ -2,7 +2,7 @@
     <span>
         <span class="message">{{message}}</span>
         {{#shortFileName}}
-        <a href="#" title="Open details" data-url="{{fileName}}" data-location="{{lineNumber}}">{{shortFileName}}</a>
+        <a href="#" title="Open details" data-url="{{fileName}}" data-line="{{lineNumber}}" data-column="{{columnNumber}}">{{shortFileName}}</a>
         {{/shortFileName}}
         <quote>
             {{#fileName}}

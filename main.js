@@ -14,6 +14,7 @@ define(function (require, exports, module) {
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
+        EditorManager = brackets.getModule('editor/EditorManager'),
         PanelManager = brackets.getModule('view/PanelManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         MainViewManager = brackets.getModule('view/MainViewManager'),
@@ -207,8 +208,12 @@ define(function (require, exports, module) {
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
             $row.find('a').first().on('click', function () {
-                var l = parseFloat($(this).data('location'));
-                GotoAgent.open($(this).data('url'), 0);
+                var l = parseFloat($(this).data('line')) - 1;
+                var c = parseFloat($(this).data('column'));
+                GotoAgent.open($(this).data('url'))
+                    .done(function(){
+                        EditorManager.getCurrentFullEditor().setCursorPos(l, c, true);
+                    });
             });
             $row.find('.message').first().on('click', function () {
                 q = $(this).parent().find('quote');

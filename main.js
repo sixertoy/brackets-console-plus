@@ -9,13 +9,15 @@ define(function (require, exports, module) {
 
 */
     var _ = brackets.getModule('thirdparty/lodash'),
+        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
-        PanelManager = brackets.getModule('view/PanelManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
+        PanelManager = brackets.getModule('view/PanelManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
+        MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
         FileViewController = brackets.getModule('project/FileViewController'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager');
@@ -88,11 +90,11 @@ define(function (require, exports, module) {
      *
      */
     function _handlerPanelVisibility() {
-        $appButton.toggleClass('active');
         Resizer.toggle($appPanel);
+        $appButton.toggleClass('active');
         CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked($appButton.hasClass('active'));
         if (!$appButton.hasClass('active')) {
-            // EditorManager.focusEditor();
+            MainViewManager.focusActivePane();
             // MainViewManager.currentDocumentChange();
         }
     }
@@ -123,9 +125,8 @@ define(function (require, exports, module) {
         var shortFile = file !== '' ? file.split('/')[file.split('/').length - 1] : '';
 
         var lineAndColumn = traces[1].match(RegexUtils.lineAndColumn());
-        var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0] : '' : '';
-        // if (line.length > 0) line = line.substr(1);
-        var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1] : '' : '';
+        var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0].substr(1) : '0' : '0';
+        var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1].substr(1) : '0' : '0';
         // if (column.length > 0) line = column.substr(1);
 
         return {
@@ -228,6 +229,7 @@ define(function (require, exports, module) {
         } catch (e) {
             return '[Circular]';
 
+
         }
     }
 
@@ -242,6 +244,7 @@ define(function (require, exports, module) {
             } else {
                 msg += p + _logObject(v);
 
+
             }
             p = ', ';
         }
@@ -254,6 +257,7 @@ define(function (require, exports, module) {
 
             if (!_.isString(type)) {
                 type = 'debug';
+
             }
 
             if (_.isObject(msg)){
@@ -283,10 +287,24 @@ define(function (require, exports, module) {
                 }),
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
-            _addListenersToRowElements($row);
+            $row.find('a').first().on('click', function () {
+                var l = parseFloat($(this).data('line')) - 1;
+                var c = parseFloat($(this).data('column'));
+                GotoAgent.open($(this).data('url'))
+                    .done(function(){
+                        EditorManager.getCurrentFullEditor().setCursorPos(l, c, true);
+                    });
+            });
+            $row.find('.message').first().on('click', function () {
+                q = $(this).parent().find('quote');
+                if ($(q).is(':visible')) {
+                    $(q).hide();
+                } else {
+                    $(q).show().css('display', 'block'); // Display block fix;
+                }
+            });
             $row.find('quote').first().hide();
             _updateNotifierIcon();
-
         }
     }
 
@@ -334,6 +352,7 @@ define(function (require, exports, module) {
 
         var minHeight = 100;
         PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
+        // WorkspaceManager.createBottomPanel
         $appPanel = $('#brackets-console-panel');
         $logContainer = $($appPanel.find('.table-container').first());
 
@@ -421,20 +440,31 @@ define(function (require, exports, module) {
     Window Error & Exceptions
 
 */
-
-    // var _windowConsoleError = $(window).console.error;
+    /*
+    var _windowConsoleError = $(window).console.error;
     function __initWindowConsoleErrorWrapper() {
-        var _orig = window.console.error;
-
-        window.console.error = function(){
-            // console.log('__initWindowConsoleErrorWrapper');
-            // console.log(arguments);
-            return _orig.apply(window.console, arguments);
-
-        };
-
+        $(window).console.error = function(){
+            return _windowConsoleError.apply(window.console, arguments);
+        }
     }
     __initWindowConsoleErrorWrapper();
+    */
+    /*
+        window.console.error = function(){
+            var oEvent = {};
+                oEvent.fileName = 'ttotototo.text';
+            var obj = {
+                errorStacks: [],
+                lineNumber: 0, // oEvent.lineno,
+                fileName: oEvent.filename,
+                columnNumber: 0, // oEvent.colno,
+                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
+            };
+            $exceptions.push('yo');
+            error(oEvent.fileName, obj);
+            return _windowConsoleError.apply(window.console, arguments);
+        };
+    */
 
     function __initWindowErrorWrapper() {
         $(window).on('error', function (event) {

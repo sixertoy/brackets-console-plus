@@ -14,8 +14,8 @@ define(function (require, exports, module) {
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
+        WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
-        PanelManager = brackets.getModule('view/PanelManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
@@ -351,8 +351,7 @@ define(function (require, exports, module) {
     AppInit.htmlReady(function () {
 
         var minHeight = 100;
-        PanelManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
-        // WorkspaceManager.createBottomPanel
+        WorkspaceManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
         $appPanel = $('#brackets-console-panel');
         $logContainer = $($appPanel.find('.table-container').first());
 

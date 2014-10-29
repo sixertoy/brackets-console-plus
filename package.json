@@ -1,55 +1,54 @@
 {
-    "name": "malas34.brackets-console-plus",
-    "title": "Console Plus",
-    "version": "1.4.1",
-    "description": "Shows console.logs &.errors without leaving Brackets. + Toolbar Icon & Notifier, Filters by logs/errors, Errors stacks details and.... a very nice look + Update: log window object error",
-    "homepage": "https://github.com/malas34/brackets-console-plus",
-    "author": {
-        "name": "Matthieu Lassalvy",
-        "email": "malas34.github@gmail.com",
-        "url": "https://github.com/malas34"
-    },
-    "repository": {
-        "url": "https://github.com/malas34/brackets-console-plus",
-        "type": "git"
-    },
-    "license": "MIT",
-    "categories":"general",
-    "keywords": [
-        "debug",
-        "log",
-        "error",
-        "console"
-    ],
-    "i18n": [
-        "fr",
-        "en",
-        "it"
-    ],
-    "files": [
-        "package.json",
-        "styles/images/button.svg",
-        "styles/styles.css",
-        "htmlContent/button.html",
-        "htmlContent/row.html",
-        "htmlContent/panel.html",
-        "main.js",
-        "strings.js",
-        "nls/strings.js",
-        "nls/fr/strings.js",
-        "nls/it/strings.js",
-        "nls/root/strings.js",
-        "lib/regex-utils.js",
-        "lib/circular-json.js"
-    ],
-    "engines": {
-        "brackets": ">=0.42.0"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.4",
-        "grunt-cli": "~0.1.13 ",
-        "grunt-contrib-qunit": "~0.5.2",
-        "grunt-contrib-jshint": "~0.6.0",
-        "grunt-contrib-compress": "~0.10.0"
-    }
+  "name": "malas34.brackets-console-plus",
+  "title": "Console Plus",
+  "version": "1.4.2",
+  "description": "Shows console.logs &.errors without leaving Brackets. + Toolbar Icon & Notifier, Filters by logs/errors, Errors stacks details and.... a very nice look + Update: log window object error",
+  "homepage": "https://github.com/malas34/brackets-console-plus",
+  "author": {
+    "name": "Matthieu Lassalvy",
+    "email": "malas34.github@gmail.com",
+    "url": "https://github.com/malas34"
+  },
+  "repository": {
+    "url": "https://github.com/malas34/brackets-console-plus",
+    "type": "git"
+  },
+  "license": "MIT",
+  "categories": "general",
+  "keywords": [
+    "debug",
+    "log",
+    "error",
+    "console"
+  ],
+  "i18n": [
+    "fr",
+    "en",
+    "it"
+  ],
+  "files": [
+    "package.json",
+    "styles/images/button.svg",
+    "styles/styles.css",
+    "htmlContent/button.html",
+    "htmlContent/row.html",
+    "htmlContent/panel.html",
+    "main.js",
+    "strings.js",
+    "nls/strings.js",
+    "nls/fr/strings.js",
+    "nls/it/strings.js",
+    "nls/root/strings.js",
+    "lib/regex-utils.js",
+    "lib/circular-json.js"
+  ],
+  "engines": {
+    "brackets": ">=0.42.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "~0.1.13 ",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-compress": "^0.12.0"
+  }
 }

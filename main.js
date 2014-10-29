@@ -16,7 +16,6 @@ define(function (require, exports, module) {
         Commands = brackets.getModule('command/Commands'),
         WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
-        PanelManager = brackets.getModule('view/PanelManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),

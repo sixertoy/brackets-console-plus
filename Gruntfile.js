@@ -4,7 +4,7 @@ module.exports = function (grunt) {
         compress: {
             main: {
                 options: {
-                    archive: 'releases/malas34.brackets-console-plus_<%= pkg.version %>.zip'
+                    archive: 'build/Releases/malas34.brackets-console-plus_<%= pkg.version %>.zip'
                 },
                 files: [
                     {

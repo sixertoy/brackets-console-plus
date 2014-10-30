@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             files: []
         },
         jshint: {
-            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/regex-utils.js', 'lib/circular-json.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
+            file: ['Gruntfile.js', 'main.js', 'strings.js', 'lib/regex-utils.js', 'lib/object-utils.js', 'lib/circular-json.js', 'nls/strings.js', 'nls/fr/strings.js', 'nls/root/strings.js', 'nls/it/strings.js']
         }
     });
 

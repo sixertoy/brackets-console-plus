@@ -211,7 +211,7 @@ define(function (require, exports, module) {
                 var l = parseFloat($(this).data('line')) - 1;
                 var c = parseFloat($(this).data('column'));
                 GotoAgent.open($(this).data('url'))
-                    .done(function(){
+                    .done(function () {
                         EditorManager.getCurrentFullEditor().setCursorPos(l, c, true);
                     });
             });

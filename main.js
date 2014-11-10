@@ -151,7 +151,7 @@ define(function (require, exports, module) {
     }
 
     function _addListenersToRowElements($row) {
-        $row.find('span').first().on('click', function(){
+        $row.find('span').first().on('click', function () {
             var q = $(this).find('quote');
             if ($(q).is(':visible')) {
                 $(q).hide();
@@ -159,14 +159,14 @@ define(function (require, exports, module) {
                 $(q).show().css('display', 'block'); // Display block fix;
             }
         });
-        $row.find('a').first().on('click', function(event){
+        $row.find('a').first().on('click', function (event) {
             event.preventDefault();
             event.stopImmediatePropagation();
             var line = $(this).data('line');
             var path = $(this).data('file').substr(8); // @TOOD caused by file:/// protocol
             FileViewController.addToWorkingSetAndSelect(path)
-                .done(function(doc){
-                    if (!_.isNull(doc)){
+                .done(function (doc) {
+                    if (!_.isNull(doc)) {
                         EditorManager.focusEditor();
                         /*
                         if (!_.isNull(line)){
@@ -175,14 +175,13 @@ define(function (require, exports, module) {
                         */
                     }
                 })
-                .fail(function(err){
-                });
+                .fail(function (err) {});
         });
     }
 
     function _logObject(obj) {
 
-        var v,
+        var prop, v,
             p = '',
             t = '\t',
             msg = '',
@@ -192,7 +191,7 @@ define(function (require, exports, module) {
             // msg = JSON.stringify(obj);
             // @TODO isDate isFinite isNaN isRegExp isEmpty isElement
             msg = '{';
-            for( var prop in obj){
+            for (prop in obj) {
                 if (obj.hasOwnProperty(prop)) {
                     v = obj[prop];
                     if (_.isObject(v)) {
@@ -211,8 +210,8 @@ define(function (require, exports, module) {
 
                         }
                     } else {
-                    // if (_.isString(v) || _.isNumber(v) || _.isNull(v) || _.isUndefined(v) || _.isBoolean(v)) {
-                        if (_.isString(v)){
+                        // if (_.isString(v) || _.isNumber(v) || _.isNull(v) || _.isUndefined(v) || _.isBoolean(v)) {
+                        if (_.isString(v)) {
                             msg += p + prop + ': \'' + v + '\'';
                         } else {
                             msg += p + prop + ': ' + v;
@@ -234,7 +233,10 @@ define(function (require, exports, module) {
     }
 
     function _logArray(arr) {
-        var i = 0, msg = '', p = '', v;
+        var i = 0,
+            msg = '',
+            p = '',
+            v;
 
         for (i = 0; i < arr.length; i++) {
             v = arr[i];
@@ -260,7 +262,7 @@ define(function (require, exports, module) {
 
             }
 
-            if (_.isObject(msg)){
+            if (_.isObject(msg)) {
                 if (_.isArray(msg)) {
                     msg = _logArray(msg);
 
@@ -291,7 +293,7 @@ define(function (require, exports, module) {
                 var l = parseFloat($(this).data('line')) - 1;
                 var c = parseFloat($(this).data('column'));
                 GotoAgent.open($(this).data('url'))
-                    .done(function(){
+                    .done(function () {
                         EditorManager.getCurrentFullEditor().setCursorPos(l, c, true);
                     });
             });

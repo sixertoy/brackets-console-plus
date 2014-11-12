@@ -95,7 +95,6 @@ define(function (require, exports, module) {
         CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked($appButton.hasClass('active'));
         if (!$appButton.hasClass('active')) {
             MainViewManager.focusActivePane();
-            // MainViewManager.currentDocumentChange();
         }
     }
 
@@ -168,11 +167,6 @@ define(function (require, exports, module) {
                 .done(function (doc) {
                     if (!_.isNull(doc)) {
                         EditorManager.focusEditor();
-                        /*
-                        if (!_.isNull(line)){
-                            EditorManager.getActiveEditor().setCursorPos(line, 0, true);
-                        }
-                        */
                     }
                 })
                 .fail(function (err) {});
@@ -254,37 +248,29 @@ define(function (require, exports, module) {
     }
 
     function log(msg, err, type) {
+        var message = '';
         if ($logContainer !== null) {
             logsCount++;
-
             if (!_.isString(type)) {
                 type = 'debug';
-
             }
-
             if (_.isObject(msg)) {
                 if (_.isArray(msg)) {
-                    msg = _logArray(msg);
-
+                    message = _logArray(msg);
                 } else if (_.isPlainObject(msg) || _.isObject(msg)) {
-                    msg = _logObject(msg);
-
+                    message = _logObject(msg);
                 }
-
             } else if (_.isUndefined(msg)) {
-                msg = 'undefined';
-
+                message = 'undefined';
             } else if (_.isNull(msg)) {
-                msg = 'null';
-
+                message = 'null';
             } else {
-                msg = msg;
+                message = msg;
             }
-
             var q,
                 str = _.extend(err, {
                     type: type,
-                    message: msg,
+                    message: message,
                     even: (logsCount % 2) ? 'odd' : ''
                 }),
                 $row = $(Mustache.render(RowHTML, str));

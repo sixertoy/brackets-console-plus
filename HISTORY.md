@@ -1,3 +1,7 @@
+#### v1.4.4
+
+Add opened at startup form previous session
+
 #### v1.4.1
 
 Click on file's name open file in brackets

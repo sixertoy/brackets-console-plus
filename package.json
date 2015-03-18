@@ -1,16 +1,16 @@
 {
   "name": "malas34.brackets-console-plus",
   "title": "Console Plus",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Shows console.logs &.errors without leaving Brackets. + Toolbar Icon & Notifier, Filters by logs/errors, Errors stacks details and.... a very nice look + Update: log window object error",
-  "homepage": "https://github.com/malas34/brackets-console-plus",
+  "homepage": "https://github.com/sixertoy/brackets-console-plus",
   "author": {
     "name": "Matthieu Lassalvy",
-    "email": "malas34.github@gmail.com",
-    "url": "https://github.com/malas34"
+    "email": "sixertoy.github@gmail.com",
+    "url": "https://github.com/sixertoy"
   },
   "repository": {
-    "url": "https://github.com/malas34/brackets-console-plus",
+    "url": "https://github.com/sixertoy/brackets-console-plus",
     "type": "git"
   },
   "license": "MIT",

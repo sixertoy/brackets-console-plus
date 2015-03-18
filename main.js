@@ -54,6 +54,7 @@ define(function (require, exports, module) {
         errorsCount = 0,
         debugPrefs = PreferencesManager.getExtensionPrefs('debug'),
         extensionPrefs = PreferencesManager.getExtensionPrefs(PREFIX + '.' + EXTENSION_ID);
+
     /** ------------------------------------
 
     UI Variables
@@ -92,8 +93,10 @@ define(function (require, exports, module) {
     function _handlerPanelVisibility() {
         Resizer.toggle($appPanel);
         $appButton.toggleClass('active');
-        CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked($appButton.hasClass('active'));
-        if (!$appButton.hasClass('active')) {
+        var opened = $appButton.hasClass('active');
+        extensionPrefs.set('opened', opened);
+        CommandManager.get(SHOWPANEL_COMMAND_ID).setChecked(opened);
+        if (!opened) {
             MainViewManager.focusActivePane();
         }
     }
@@ -136,17 +139,15 @@ define(function (require, exports, module) {
             shortFileName: shortFile
         };
     }
-    /** ------------------------------------
+        /** ------------------------------------
 
     Console Functions
 
 */
 
     function _removeListenersToRowElements() {
-
         $logContainer.find('.box .row > span').off('click');
         $logContainer.find('.box .row a').off('click');
-
     }
 
     function _addListenersToRowElements($row) {
@@ -211,18 +212,13 @@ define(function (require, exports, module) {
                             msg += p + prop + ': ' + v;
                         }
                     }
-
                 }
                 p = ', ';
-
             }
             msg += '}';
             return msg;
-
         } catch (e) {
             return '[Circular]';
-
-
         }
     }
 
@@ -231,16 +227,12 @@ define(function (require, exports, module) {
             msg = '',
             p = '',
             v;
-
         for (i = 0; i < arr.length; i++) {
             v = arr[i];
             if (_.isArray(v)) {
                 msg += p + _logArray(v);
-
             } else {
                 msg += p + _logObject(v);
-
-
             }
             p = ', ';
         }
@@ -350,7 +342,6 @@ define(function (require, exports, module) {
         $(base + ' .debug').on('click', _refreshPanel);
         $(base + ' .close').on('click', _handlerPanelVisibility);
         $(base + ' .title').on('click', _handlerPanelVisibility);
-
         $('#main-toolbar .buttons').append(Mustache.render(ButtonHTML, ExtensionStrings));
         $appButton = $('#brackets-console-button').on('click', _handlerPanelVisibility);
         $($appButton).find('.counts').first().hide();
@@ -378,6 +369,18 @@ define(function (require, exports, module) {
 
         __registerCommands();
         __registerWindowsMenu();
+
+        // si la valeur
+        // n'est pas definie a l'installation
+        if (!extensionPrefs.get('opened')) {
+            extensionPrefs.set('opened', false);
+        }
+
+        // ouverture du panneau
+        // suivant l'etat de la session precedente
+        if (extensionPrefs.get('opened')) {
+            _handlerPanelVisibility();
+        }
 
     });
     /** ------------------------------------
@@ -427,31 +430,6 @@ define(function (require, exports, module) {
     Window Error & Exceptions
 
 */
-    /*
-    var _windowConsoleError = $(window).console.error;
-    function __initWindowConsoleErrorWrapper() {
-        $(window).console.error = function(){
-            return _windowConsoleError.apply(window.console, arguments);
-        }
-    }
-    __initWindowConsoleErrorWrapper();
-    */
-    /*
-        window.console.error = function(){
-            var oEvent = {};
-                oEvent.fileName = 'ttotototo.text';
-            var obj = {
-                errorStacks: [],
-                lineNumber: 0, // oEvent.lineno,
-                fileName: oEvent.filename,
-                columnNumber: 0, // oEvent.colno,
-                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
-            };
-            $exceptions.push('yo');
-            error(oEvent.fileName, obj);
-            return _windowConsoleError.apply(window.console, arguments);
-        };
-    */
 
     function __initWindowErrorWrapper() {
         $(window).on('error', function (event) {
@@ -465,8 +443,6 @@ define(function (require, exports, module) {
             };
             error(oEvent.message, obj);
         });
-
     }
-    __initWindowErrorWrapper();
-
+    __initWindowErrorWrapper(); 
 });

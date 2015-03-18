@@ -5,27 +5,20 @@ define(function (require, exports, module) {
     'use strict';
 
     var SpecRunnerUtils = brackets.getModule("spec/SpecRunnerUtils");
-
     describe('[Console Plus]', function () {
-
         var brackets,
             testWindow;
-
         beforeEach(function () {
             SpecRunnerUtils.createTestWindowAndRun(this, function (w) {
                 testWindow = w;
                 brackets = testWindow.brackets;
             });
         });
-
         afterEach(function () {
             brackets = null;
             testWindow = null;
             SpecRunnerUtils.closeTestWindow();
         });
-
         // Starts Unit Tests
-
     });
-
 });

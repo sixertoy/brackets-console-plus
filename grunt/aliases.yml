@@ -1,0 +1,6 @@
+default:
+  - jshint
+package:
+  - jshint
+  - bump
+  - compress

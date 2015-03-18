@@ -1,7 +1,7 @@
 {
   "name": "malas34.brackets-console-plus",
   "title": "Console Plus",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Shows console.logs &.errors without leaving Brackets. + Toolbar Icon & Notifier, Filters by logs/errors, Errors stacks details and.... a very nice look + Update: log window object error",
   "homepage": "https://github.com/malas34/brackets-console-plus",
   "author": {
@@ -48,8 +48,10 @@
   },
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-bump": "^0.3.0",
     "grunt-cli": "~0.1.13 ",
+    "grunt-contrib-compress": "^0.12.0",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-compress": "^0.12.0"
+    "load-grunt-config": "^0.16.0"
   }
 }

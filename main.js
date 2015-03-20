@@ -20,49 +20,52 @@ define(function (require, exports, module) {
         MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
         FileViewController = brackets.getModule('project/FileViewController'),
-        PreferencesManager = brackets.getModule('preferences/PreferencesManager');
-    ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
-    /** ------------------------------------
+        PreferencesManager = brackets.getModule('preferences/PreferencesManager'),
+        /** ------------------------------------
 
     Globals
 
 */
-    var PREFIX = 'malas34',
+        PREFIX = 'malas34',
         EXTENSION_ID = 'brackets-consoleplus',
-        SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel';
-    /** ------------------------------------
+        SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel',
+        /** ------------------------------------
+
+    REquires
+
+*/
+        ExtensionStrings = require('strings'),
+        RegexUtils = require('lib/regex-utils'),
+        ObjectUtils = require('lib/object-utils'),
+        CircularJSON = require('lib/circular-json'),
+        /** ------------------------------------
 
     UI Templates
 
 */
-    var ExtensionStrings = require('strings'),
-        RegexUtils = require('lib/regex-utils'),
-        ObjectUtils = require('lib/object-utils'),
-        CircularJSON = require('lib/circular-json');
-
-    var RowHTML = require('text!htmlContent/row.html'),
+        RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
-        ButtonHTML = require('text!htmlContent/button.html');
-    /** ------------------------------------
+        ButtonHTML = require('text!htmlContent/button.html'),
+        /** ------------------------------------
 
     Variables
 
 */
-    var $exceptions = [],
         logsCount = 0,
         warnsCount = 0,
         errorsCount = 0,
+        exceptions = [],
         debugPrefs = PreferencesManager.getExtensionPrefs('debug'),
-        extensionPrefs = PreferencesManager.getExtensionPrefs(PREFIX + '.' + EXTENSION_ID);
-
-    /** ------------------------------------
+        extensionPrefs = PreferencesManager.getExtensionPrefs(PREFIX + '.' + EXTENSION_ID),
+        /** ------------------------------------
 
     UI Variables
 
 */
-    var $appPanel,
+        $appPanel,
         $appButton,
         $logContainer;
+    ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
 
     /** ------------------------------------
 
@@ -116,19 +119,21 @@ define(function (require, exports, module) {
     }
 
     function __getErrorObject(stacks) {
+        var column, line, lineAndColumn,
+            shortFile, file, traces, oTraces;
         // format orginal stacks
-        var oTraces = _.filter(stacks.split("\n"), function (v) {
+        oTraces = _.filter(stacks.split("\n"), function (v) {
             return $.trim(v);
         });
-        var traces = oTraces.slice(1);
+        traces = oTraces.slice(1);
 
-        var file = traces[1].match(RegexUtils.file());
+        file = traces[1].match(RegexUtils.file());
         file = file !== null ? file.length ? file[0] : '' : '';
-        var shortFile = file !== '' ? file.split('/')[file.split('/').length - 1] : '';
+        shortFile = file !== '' ? file.split('/')[file.split('/').length - 1] : '';
 
-        var lineAndColumn = traces[1].match(RegexUtils.lineAndColumn());
-        var line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0].substr(1) : '0' : '0';
-        var column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1].substr(1) : '0' : '0';
+        lineAndColumn = traces[1].match(RegexUtils.lineAndColumn());
+        line = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[0].substr(1) : '0' : '0';
+        column = lineAndColumn !== null ? lineAndColumn.length ? lineAndColumn[1].substr(1) : '0' : '0';
         // if (column.length > 0) line = column.substr(1);
 
         return {
@@ -285,21 +290,33 @@ define(function (require, exports, module) {
             });
             $row.find('quote').first().hide();
             _updateNotifierIcon();
+        } else {
+            exceptions.push({
+                error: err,
+                type: type,
+                message: msg
+            });
         }
     }
 
     function warn(msg, err) {
+        /*
         if ($logContainer !== null) {
-            warnsCount++;
-            log(msg, err, 'warn');
         }
+        */
+        warnsCount++;
+        log(msg, err, 'warn');
     }
 
     function error(msg, err) {
+        /*
         if ($logContainer !== null) {
             errorsCount++;
             log(msg, err, 'error');
         }
+        */
+        errorsCount++;
+        log(msg, err, 'error');
     }
 
     function clearConsole() {
@@ -329,6 +346,9 @@ define(function (require, exports, module) {
      *
      */
     AppInit.htmlReady(function () {
+
+
+
 
         var minHeight = 100;
         WorkspaceManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
@@ -382,6 +402,16 @@ define(function (require, exports, module) {
             _handlerPanelVisibility();
         }
 
+        /*
+        var i;
+        if (exceptions.length) {
+            for (i = 0; i < exceptions.length; i++) {
+                log(exceptions.message, exceptions.error, exceptions.type);
+            }
+            exceptions = [];
+        }
+        */
+
     });
     /** ------------------------------------
 
@@ -432,6 +462,7 @@ define(function (require, exports, module) {
 */
 
     function __initWindowErrorWrapper() {
+
         $(window).on('error', function (event) {
             var oEvent = event.originalEvent;
             var obj = {
@@ -444,5 +475,6 @@ define(function (require, exports, module) {
             error(oEvent.message, obj);
         });
     }
-    __initWindowErrorWrapper(); 
+    __initWindowErrorWrapper();
+
 });

@@ -1,6 +1,12 @@
-default:
-  - jshint
+build:
+  - less
+  - autoprefixer
 package:
   - jshint
+  - build
   - bump
   - compress
+default:
+  - jshint
+  - build
+  - watch

@@ -3,8 +3,8 @@ build:
   - autoprefixer
 package:
   - jshint
-  - build
   - bump
+  - build
   - compress
 default:
   - jshint

@@ -1,73 +1,79 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, console, brackets, _, $, Mustache, window, document */
-define(function (require, exports, module) {
+/* eslint no-console: 0 */
+/* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
+/* global define, console, brackets, $, window, document */
+define(function(require, exports, module) {
 
     'use strict';
-    /** ------------------------------------
+
+    /* ------------------------------------
 
     Modules
 
-*/
+    ------------------------------------ */
     var _ = brackets.getModule('thirdparty/lodash'),
-        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
-        WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
+        Mustache = brackets.getModule('thirdparty/mustache/mustache'),
+        WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
+        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         FileViewController = brackets.getModule('project/FileViewController'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager'),
-        /** ------------------------------------
+
+        /* ------------------------------------
 
     Globals
 
-*/
+        ------------------------------------ */
         PREFIX = 'malas34',
         EXTENSION_ID = 'brackets-consoleplus',
         SHOWPANEL_COMMAND_ID = PREFIX + '.' + EXTENSION_ID + '.showpanel',
-        /** ------------------------------------
 
-    REquires
+        /* ------------------------------------
 
-*/
+        Requires
+
+        ------------------------------------ */
         ExtensionStrings = require('strings'),
         RegexUtils = require('lib/regex-utils'),
         ObjectUtils = require('lib/object-utils'),
-        CircularJSON = require('lib/circular-json'),
-        /** ------------------------------------
+
+        /* ------------------------------------
 
     UI Templates
 
-*/
+        ------------------------------------ */
         RowHTML = require('text!htmlContent/row.html'),
         PanelHTML = require('text!htmlContent/panel.html'),
         ButtonHTML = require('text!htmlContent/button.html'),
-        /** ------------------------------------
+
+        /* ------------------------------------
 
     Variables
 
-*/
+        ------------------------------------ */
         logsCount = 0,
         warnsCount = 0,
         errorsCount = 0,
         exceptions = [],
-        debugPrefs = PreferencesManager.getExtensionPrefs('debug'),
         extensionPrefs = PreferencesManager.getExtensionPrefs(PREFIX + '.' + EXTENSION_ID),
-        /** ------------------------------------
+
+        /* ------------------------------------
 
     UI Variables
 
-*/
+        ------------------------------------ */
         $appPanel,
         $appButton,
         $logContainer;
     ExtensionUtils.loadStyleSheet(module, 'styles/styles.css');
 
-    /** ------------------------------------
+    /* ------------------------------------
 
     Private Functions
 
@@ -78,11 +84,15 @@ define(function (require, exports, module) {
      * MAJ du compteur de l'icone
      *
      */
-    function _updateNotifierIcon() {
-        $('#brackets-console-panel .toolbar .warn small em').first().text((warnsCount));
-        $('#brackets-console-panel .toolbar .error small em').first().text((errorsCount));
-        $('#brackets-console-panel .toolbar .debug small em').first().text((logsCount - (errorsCount + warnsCount)));
-        var $input = $appButton.find('.counts').first();
+    function _updateNotifierIcon () {
+        var $input,
+            elt = $('#brackets-console-panel .toolbar .warn small em').first();
+        elt.text((warnsCount));
+        elt = $('#brackets-console-panel .toolbar .error small em').first();
+        elt.text((errorsCount));
+        elt = $('#brackets-console-panel .toolbar .debug small em').first()
+        elt.text((logsCount - (errorsCount + warnsCount)));
+        $input = $appButton.find('.counts').first();
         $input.toggle(errorsCount > 0);
         $input.find('em').first().text(errorsCount);
     }
@@ -93,7 +103,7 @@ define(function (require, exports, module) {
      * MAJ de la class de l'icone du panneau
      *
      */
-    function _handlerPanelVisibility() {
+    function _handlerPanelVisibility () {
         Resizer.toggle($appPanel);
         $appButton.toggleClass('active');
         var opened = $appButton.hasClass('active');
@@ -104,10 +114,11 @@ define(function (require, exports, module) {
         }
     }
 
-    function _refreshPanel(event) {
-        var $this = $(event.currentTarget);
+    function _refreshPanel (event) {
+        var child,
+            $this = $(event.currentTarget);
         $logContainer.find('.box > *').show();
-        var child = $this.parent().find('.active').first();
+        child = $this.parent().find('.active').first();
         if (!_.isNull(child) && !_.isUndefined(child)) {
             child.removeClass('active');
         }
@@ -118,12 +129,12 @@ define(function (require, exports, module) {
         }
     }
 
-    function __getErrorObject(stacks) {
+    function __getErrorObject (stacks) {
         var column, line, lineAndColumn,
             shortFile, file, traces, oTraces;
         // format orginal stacks
-        oTraces = _.filter(stacks.split("\n"), function (v) {
-            return $.trim(v);
+        oTraces = _.filter(stacks.split('\n'), function(val) {
+            return $.trim(val);
         });
         traces = oTraces.slice(1);
 
@@ -144,38 +155,41 @@ define(function (require, exports, module) {
             shortFileName: shortFile
         };
     }
-        /** ------------------------------------
 
-    Console Functions
+        /* ------------------------------------
 
-*/
+        Console Functions
 
-    function _removeListenersToRowElements() {
+        ------------------------------------ */
+
+    function _removeListenersRowElements () {
         $logContainer.find('.box .row > span').off('click');
         $logContainer.find('.box .row a').off('click');
     }
 
-    function _addListenersToRowElements($row) {
-        $row.find('span').first().on('click', function () {
-            var q = $(this).find('quote');
+    function _addListenersToRowElements ($row) {
+        var q;
+        $row.find('span').first().on('click', function() {
+            q = $(this).find('quote');
             if ($(q).is(':visible')) {
                 $(q).hide();
             } else {
-                $(q).show().css('display', 'block'); // Display block fix;
+                // Display block fix;
+                $(q).show().css('display', 'block');
             }
         });
-        $row.find('a').first().on('click', function (event) {
+        $row.find('a').first().on('click', function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
             var line = $(this).data('line');
             var path = $(this).data('file').substr(8); // @TOOD caused by file:/// protocol
             FileViewController.addToWorkingSetAndSelect(path)
-                .done(function (doc) {
+                .done(function(doc) {
                     if (!_.isNull(doc)) {
                         EditorManager.focusEditor();
                     }
                 })
-                .fail(function (err) {});
+                .fail(function(err) {});
         });
     }
 
@@ -272,20 +286,21 @@ define(function (require, exports, module) {
                 }),
                 $row = $(Mustache.render(RowHTML, str));
             $logContainer.find('.box').first().append($row);
-            $row.find('a').first().on('click', function () {
-                var l = parseFloat($(this).data('line')) - 1;
-                var c = parseFloat($(this).data('column'));
+            $row.find('a').first().on('click', function() {
+                var l = parseFloat($(this).data('line')) - 1,
+                    c = parseFloat($(this).data('column'));
                 GotoAgent.open($(this).data('url'))
-                    .done(function () {
+                    .done(function() {
                         EditorManager.getCurrentFullEditor().setCursorPos(l, c, true);
                     });
             });
-            $row.find('.message').first().on('click', function () {
+            $row.find('.message').first().on('click', function() {
                 q = $(this).parent().find('quote');
                 if ($(q).is(':visible')) {
                     $(q).hide();
                 } else {
-                    $(q).show().css('display', 'block'); // Display block fix;
+                    // Display block fix;
+                    $(q).show().css('display', 'block');
                 }
             });
             $row.find('quote').first().hide();
@@ -299,7 +314,7 @@ define(function (require, exports, module) {
         }
     }
 
-    function warn(msg, err) {
+    function warn (msg, err) {
         /*
         if ($logContainer !== null) {
         }
@@ -308,19 +323,13 @@ define(function (require, exports, module) {
         log(msg, err, 'warn');
     }
 
-    function error(msg, err) {
-        /*
-        if ($logContainer !== null) {
-            errorsCount++;
-            log(msg, err, 'error');
-        }
-        */
+    function error (msg, err) {
         errorsCount++;
         log(msg, err, 'error');
     }
 
-    function clearConsole() {
-        _removeListenersToRowElements();
+    function clearConsole () {
+        _removeListenersRowElements();
         $logContainer.find('.box').html('');
         logsCount = 0;
         warnsCount = 0;
@@ -328,7 +337,7 @@ define(function (require, exports, module) {
         _updateNotifierIcon();
     }
 
-    /** ------------------------------------
+    /* ------------------------------------
 
     Extension Inits
 
@@ -345,17 +354,14 @@ define(function (require, exports, module) {
      * Add listeners toggle panel visible/hide
      *
      */
-    AppInit.htmlReady(function () {
-
-
-
-
-        var minHeight = 100;
+    AppInit.htmlReady(function() {
+        var base,
+            minHeight = 100;
         WorkspaceManager.createBottomPanel(EXTENSION_ID + '.panel', $(Mustache.render(PanelHTML, ExtensionStrings)), minHeight);
         $appPanel = $('#brackets-console-panel');
         $logContainer = $($appPanel.find('.table-container').first());
 
-        var base = '#brackets-console-panel .toolbar';
+        base = '#brackets-console-panel .toolbar';
         $(base + ' .clear').on('click', clearConsole);
         $(base + ' .warn').on('click', _refreshPanel);
         $(base + ' .error').on('click', _refreshPanel);
@@ -370,22 +376,22 @@ define(function (require, exports, module) {
 
     });
 
-    /** ------------------------------------
+    /* ------------------------------------
 
     Commands and Menus
 
 */
-    function __registerCommands() {
+    function __registerCommands () {
         CommandManager.register(ExtensionStrings.SHOW_PANEL, SHOWPANEL_COMMAND_ID, _handlerPanelVisibility);
     }
 
 
-    function __registerWindowsMenu() {
+    function __registerWindowsMenu () {
         var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
         menu.addMenuItem(SHOWPANEL_COMMAND_ID, 'CTRL-F12', Menus.AFTER, Commands.VIEW_TOGGLE_INSPECTION);
     }
 
-    AppInit.appReady(function () {
+    AppInit.appReady(function() {
 
         __registerCommands();
         __registerWindowsMenu();
@@ -401,45 +407,34 @@ define(function (require, exports, module) {
         if (extensionPrefs.get('opened')) {
             _handlerPanelVisibility();
         }
-
-        /*
-        var i;
-        if (exceptions.length) {
-            for (i = 0; i < exceptions.length; i++) {
-                log(exceptions.message, exceptions.error, exceptions.type);
-            }
-            exceptions = [];
-        }
-        */
-
     });
-    /** ------------------------------------
+
+    /* ------------------------------------
 
     Console Proto
 
-*/
-    function __initConsoleWrapper() {
+    ------------------------------------ */
+    function __initConsoleWrapper () {
 
         var _log = console.log,
             _warn = console.warn,
-            _debug = console.debug,
             _error = console.error;
 
-        console.log = function () {
+        console.log = function() {
             var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             log(msg, obj);
             return _log.apply(console, arguments);
         };
 
-        console.error = function () {
+        console.error = function() {
             var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             error(msg, obj);
             return _error.apply(console, arguments);
         };
 
-        console.warn = function () {
+        console.warn = function() {
             var obj = __getErrorObject((new Error('')).stack),
                 msg = _.toArray(arguments)[0];
             warn(msg, obj);
@@ -455,23 +450,23 @@ define(function (require, exports, module) {
 
     }
     __initConsoleWrapper();
-    /** ------------------------------------
+
+    /* ------------------------------------
 
     Window Error & Exceptions
 
-*/
+    ------------------------------------ */
+    function __initWindowErrorWrapper () {
 
-    function __initWindowErrorWrapper() {
-
-        $(window).on('error', function (event) {
-            var oEvent = event.originalEvent;
-            var obj = {
-                errorStacks: [],
-                lineNumber: oEvent.lineno,
-                fileName: oEvent.filename,
-                columnNumber: oEvent.colno,
-                shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
-            };
+        $(window).on('error', function(event) {
+            var oEvent = event.originalEvent,
+                obj = {
+                    errorStacks: [],
+                    lineNumber: oEvent.lineno,
+                    fileName: oEvent.filename,
+                    columnNumber: oEvent.colno,
+                    shortFileName: oEvent.filename !== '' ? oEvent.filename.split('/')[oEvent.filename.split('/').length - 1] : ''
+                };
             error(oEvent.message, obj);
         });
     }

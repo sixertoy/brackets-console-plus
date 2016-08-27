@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, console, brackets, _, $, Mustache, window, document */
+/*global define, console, brackets, _, $, window, document */
 define(function (require, exports, module) {
 
     'use strict';
@@ -9,16 +9,17 @@ define(function (require, exports, module) {
 
 */
     var _ = brackets.getModule('thirdparty/lodash'),
-        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         Menus = brackets.getModule('command/Menus'),
         AppInit = brackets.getModule('utils/AppInit'),
         Resizer = brackets.getModule('utils/Resizer'),
         Commands = brackets.getModule('command/Commands'),
-        WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
         EditorManager = brackets.getModule('editor/EditorManager'),
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         MainViewManager = brackets.getModule('view/MainViewManager'),
         CommandManager = brackets.getModule('command/CommandManager'),
+        Mustache = brackets.getModule('thirdparty/mustache/mustache'),
+        WorkspaceManager = brackets.getModule('view/WorkspaceManager'),
+        GotoAgent = brackets.getModule('LiveDevelopment/Agents/GotoAgent'),
         FileViewController = brackets.getModule('project/FileViewController'),
         PreferencesManager = brackets.getModule('preferences/PreferencesManager'),
         /** ------------------------------------
